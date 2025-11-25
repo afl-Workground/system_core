@@ -11,6 +11,21 @@
       "File": "foreground/cpus"
     },
     {
+      "Name": "NtFgCPUs",
+      "Controller": "cpuset",
+      "File": "nt_foreground/cpus"
+    },
+    {
+      "Name": "SvpCPUs",
+      "Controller": "cpuset",
+      "File": "svp/cpus"
+    },
+    {
+      "Name": "AudioCPUs",
+      "Controller": "cpuset",
+      "File": "audio-app/cpus"
+    },
+    {
       "Name": "HighCapacityWICPUs",
       "Controller": "cpuset",
       "File": "foreground_window/cpus"
@@ -169,6 +184,19 @@
       ]
     },
     {
+      "Name": "HighNtPerformance",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "nt_foreground"
+          }
+        }
+      ]
+    },
+    {
       "Name": "HighPerformanceWI",
       "Actions": [
         {
@@ -255,6 +283,22 @@
           {
             "Controller": "cpu",
             "Path": "dex2oat"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpuset",
+            "Path": "dex2oat"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "system-background"
           }
         }
       ]
@@ -388,6 +432,22 @@
             "Controller": "cpuset",
             "Path": "background"
           }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "background"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": "background"
+          }
         }
       ]
     },
@@ -414,6 +474,22 @@
             "Controller": "cpuset",
             "Path": "foreground"
           }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "foreground"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
         }
       ]
     },
@@ -431,6 +507,42 @@
       ]
     },
     {
+      "Name": "ProcessNtCapacityHigh",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpuset",
+            "Path": "nt_foreground"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "nt_foreground"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
+        },
+        {
+          "Name": "SetTimerSlack",
+          "Params":
+          {
+            "Slack": "10000000"
+          }
+        }
+      ]
+    },
+    {
       "Name": "ProcessCapacityMax",
       "Actions": [
         {
@@ -440,10 +552,107 @@
             "Controller": "cpuset",
             "Path": "top-app"
           }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "top-app"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
         }
       ]
     },
 
+    {
+      "Name": "SvpPolicy",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpuset",
+            "Path": "svp"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "svp"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
+        },
+        {
+          "Name": "SetTimerSlack",
+          "Params":
+          {
+            "Slack": "50000"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "UClampMin",
+            "Value": "100"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "UClampMax",
+            "Value": "100"
+          }
+        },
+        {
+          "Name": "SetSchedulerPolicy",
+          "Params":
+          {
+            "Policy": "SCHED_FIFO",
+            "Priority": "1"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "UClampLatencySensitive",
+            "Value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "SvpSched",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "svp"
+          }
+        },
+      ]
+    },
     {
       "Name": "ServiceCapacityLow",
       "Actions": [
@@ -452,6 +661,14 @@
           "Params":
           {
             "Controller": "cpuset",
+            "Path": "system-background"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
             "Path": "system-background"
           }
         }
@@ -467,6 +684,14 @@
             "Controller": "cpuset",
             "Path": "restricted"
           }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "restricted"
+          }
         }
       ]
     },
@@ -479,6 +704,14 @@
           "Params":
           {
             "Controller": "cpuset",
+            "Path": "camera-daemon"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
             "Path": "camera-daemon"
           }
         }
@@ -544,7 +777,7 @@
           "Name": "SetTimerSlack",
           "Params":
           {
-            "Slack": "40000000"
+            "Slack": "10000000"
           }
         }
       ]
@@ -570,7 +803,7 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "system-background"
+            "Path": "top-app"
           }
         }
       ]
@@ -583,7 +816,52 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "system-background"
+            "Path": "top-app"
+          }
+        }
+      ]
+    },
+
+    {
+      "Name": "AudioPolicy",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpuset",
+            "Path": "audio-app"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "foreground"
+          }
+        },
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
+        },
+        {
+          "Name": "SetSchedulerPolicy",
+          "Params":
+          {
+            "Policy": "SCHED_OTHER",
+            "Priority": "-16"
+          }
+        },
+        {
+          "Name": "SetTimerSlack",
+          "Params":
+          {
+            "Slack": "50000"
           }
         }
       ]
@@ -681,6 +959,14 @@
       "Profiles": [ "RealtimePerformance", "MaxIoPriority", "TimerSlackNormal" ]
     },
     {
+      "Name": "SCHED_SP_NT_FG",
+      "Profiles": [ "HighNtPerformance" ]
+    },
+    {
+      "Name": "SCHED_SP_SVP",
+      "Profiles": [ "SvpSched" ]
+    },
+    {
       "Name": "CPUSET_SP_DEFAULT",
       "Profiles": [ "TimerSlackNormal" ]
     },
@@ -723,6 +1009,18 @@
     {
       "Name": "InputPolicy",
       "Profiles": [ "RealTimeInputScheduling", "MaxPerformance", "ProcessCapacityMax", "TimerSlackNormal" ]
-    }
+    },
+    {
+      "Name": "CPUSET_SP_SVP",
+      "Profiles": [ "SvpPolicy" ]
+    },
+    {
+      "Name": "CPUSET_SP_NT_FOREGROUND",
+      "Profiles": [ "ProcessNtCapacityHigh" ]
+    },
+    {
+      "Name": "CPUSET_SP_AUDIO",
+      "Profiles": [ "HighPerformance", "AudioPolicy", "HighIoPriority", "TimerSlackNormal" ]
+    },
   ]
 }
